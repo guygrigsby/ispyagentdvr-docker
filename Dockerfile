@@ -70,4 +70,4 @@ EXPOSE 50000-50010/udp
 VOLUME ["/agent/Media/XML", "/agent/Media/WebServerRoot/Media", "/agent/Commands"]
 
 # Define service entrypoint
-CMD ["dotnet", "/agent/Agent.dll"]
+CMD ["/usr/bin/dotnet", "/agent/Agent.dll"]
