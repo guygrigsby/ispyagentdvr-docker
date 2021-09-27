@@ -1,4 +1,4 @@
-FROM jrottenberg/ffmpeg:4.1-alpine
+FROM jrottenberg/ffmpeg:4.0-alpine
 
 ENV ISPY_URL https://ispyfiles.azureedge.net/downloads
 ENV ISPY_FILENAME Agent_Linux64_3_5_9_0.zip
