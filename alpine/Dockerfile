@@ -6,7 +6,7 @@ ENV ISPY_FILENAME Agent_Linux64_3_5_9_0.zip
 ENV DOTNET_URL https://download.visualstudio.microsoft.com/download/pr/57d5859a-f302-408d-95b0-8ab2cbcdb431/db0a869ce50247ca92cdc03a52d4a8a7
 ENV DOTNET_FILE dotnet-sdk-3.1.413-linux-musl-x64.tar.gz
 
-RUN apk add --no-cache linux-headers libevent libevent-dev openssl openssl-dev build-base pkgconf make ca-certificates bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib unzip curl && update-ca-certificates
+RUN apk add --no-cache linux-headers libevent libevent-dev openssl openssl-dev build-base pkgconf make ca-certificates bash icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib unzip curl gstreamer gstreamer-dev && update-ca-certificates
 
 RUN apk add libgdiplus --repository https://dl-3.alpinelinux.org/alpine/edge/testing/
 
