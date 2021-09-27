@@ -23,18 +23,18 @@ Ports used to create connections or WebRTC. These will be used as needed.
 
 #### Migration Notes: If you had the old format of audio and video volumes please move them within the new media folder before starting the container again.
 It would look something like this:
-mkdir /appdata/ispyagentdvr/media
-mv /apdata/ispyagentdvr/audio /appdata/ispyagentdvr/media
-mv /appdata/ispyagentdvr/video /appdata/ispyagentdvr/media
+mkdir /var/ispyagentdvr/media
+mv /apdata/ispyagentdvr/audio /var/ispyagentdvr/media
+mv /var/ispyagentdvr/video /var/ispyagentdvr/media
 
 ## Running Image :
 ```bash
 docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
--v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
--v /appdata/ispyagentdvr/commands:/agent/Commands/ \
--e TZ=America/Los_Angeles \
---name ispyagentdvr doitandbedone/ispyagentdvr
+-v /var/ispyagentdvr/config/:/agent/Media/XML/ \
+-v /var/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /var/ispyagentdvr/commands:/agent/Commands/ \
+-e TZ=America/Denver \
+--name ispyagentdvr guygrigsby/ispyagentdvr
 ```
 This will default to the latest. See Tags section for other versions. Make sure to change TZ value to your own timezone, here's a table with all values:
 https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -44,9 +44,9 @@ https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 This tag will give you the latest version of the build.
 ```bash
 docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
--v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
--v /appdata/ispyagentdvr/commands:/agent/Commands/ \
+-v /var/ispyagentdvr/config/:/agent/Media/XML/ \
+-v /var/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /var/ispyagentdvr/commands:/agent/Commands/ \
 -e TZ=America/Los_Angeles \
 --name ispyagentdvr doitandbedone/ispyagentdvr:latest
 ```
@@ -56,9 +56,9 @@ Tags will also be created for older releases.
 For example, for version 2.7.6.0:
 ```bash
 docker run -it -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
--v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
--v /appdata/ispyagentdvr/commands:/agent/Commands/ \
+-v /var/ispyagentdvr/config/:/agent/Media/XML/ \
+-v /var/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /var/ispyagentdvr/commands:/agent/Commands/ \
 -e TZ=America/Los_Angeles \
 --name ispyagentdvr doitandbedone/ispyagentdvr:2.7.6.0
 ```
@@ -66,42 +66,47 @@ docker run -it -p 8090:8090 -p 3478:3478/udp 50000-50010:50000-50010/udp \
 ## Non host network use:
 As of version 2.8.4.0 non host network is supported, for this to work, a turn server was included with the software. You will need to open up ports for this to porperly work, thus the UDP ports listed in the sample runs. 
 
-To access UI panel go to the container's http://<container's ip>:<port> such as http://192.168.1.42:8090.
+To access UI panel go to the container's public ip, ex such as http://192.168.1.42:8090.
+
 ## VLC Support:
 Please use tag vlc:
+
 ```bash
 docker run -it -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp \
--v /appdata/ispyagentdvr/config/:/agent/Media/XML/ \
--v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
--v /appdata/ispyagentdvr/commands:/agent/Commands/ \
+-v /var/ispyagentdvr/config/:/agent/Media/XML/ \
+-v /var/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ \
+-v /var/ispyagentdvr/commands:/agent/Commands/ \
  -e TZ=America/Los_Angeles \
 --name ispyagentdvr doitandbedone/ispyagentdvr:vlc
 ```
 
-### Upgrade existing setup:
-Open up a terminal, and let's call bash in your existing image:
-```bash
-docker exec -it ispyagentdvr /bin/bash
-```
-Once in, run the following command:
-```bash
-apt-get update && apt-get install -y libvlc-dev vlc libx11-dev
-```
-Once the installation is done, exit out of bash:
-```bash
-exit
-```
-Now, let's restart the container:
-```bash
-docker restart ispyagentdvr
-```
-That should be it!
+## Do not do this
+> ### Upgrade existing setup: 
+> Open up a terminal, and let's call bash in your existing image:
+> ```bash
+> docker exec -it ispyagentdvr /bin/bash
+> ```
+> Once in, run the following command:
+> ```bash
+> apt-get update && apt-get install -y libvlc-dev vlc libx11-dev
+> ```
+> Once the installation is done, exit out of bash:
+> ```bash
+> exit
+> ```
+> Now, let's restart the container:
+> ```bash
+> docker restart ispyagentdvr
+> ```
+> That should be it!
+> 
+> Please note that if you named your container differently you must use either the container id or name you assigned instead of "ispyagentdvr". You can get a list of containers by running the follwoing command:
+> ```bash
+> docker ps -a
+> ```
+> Also note if you remove the container you will have to do this again. Reason why we recommend using vlc tag instead.
 
-Please note that if you named your container differently you must use either the container id or name you assigned instead of "ispyagentdvr". You can get a list of containers by running the follwoing command:
-```bash
-docker ps -a
-```
-Also note if you remove the container you will have to do this again. Reason why we recommend using vlc tag instead.
+If you have properly mounted your external data to a persistent data source, just change the image number.
 
 ### Feedback:
 - [Ask a question](https://github.com/doitandbedone/ispyagentdvr-docker/discussions/146)
@@ -110,6 +115,6 @@ Also note if you remove the container you will have to do this again. Reason why
 - [Join our discussions](https://github.com/doitandbedone/ispyagentdvr-docker/discussions)
 
 ### Tips/Donations:
-- All tips/donations are welcomed: [![Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ADN2P5FBEBMZ4&item_name=All+tips%2Fcontributions+are+welcomed+and+will+fuel+development%21&currency_code=USD)
+- All tips/donations are welcomed: [![Paypal](https://www.paypal.com/biz/fund?id=L9VLX646QZBCA)
  
 
